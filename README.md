@@ -58,9 +58,56 @@ gitignored — never commit keys.
 
 ## `demo-video/`
 
-Scripts and source for the narrated demo video (AI voiceover slides + the live
-end-to-end screen recording). See [`demo-video/README.md`](demo-video/README.md) for the
-update loop (`gen_vo.py` → `deck/deck.html` → `deck/build.sh`, or `./rebuild.sh`).
+Scripts and source for the narrated demo video (AI-voiceover slides + the live
+end-to-end screen recording).
+
+```
+demo-video/
+├── README.md          ← full update guide (the 4-step loop)
+├── rebuild.sh         ← one-command re-render (--voice also redoes narration)
+├── gen_vo.py          ← narration text + voice (edit SEGMENTS here)
+├── gen_vo2.py         ← one-off (ignore)
+├── vo/                ← generated narration wavs + manifest.json
+└── deck/
+    ├── deck.html      ← all slides (scene = ?s=<name>)
+    ├── build.sh       ← assembles the explainer
+    ├── frames/        ← rendered slide PNGs
+    ├── shots/         ← demo screenshots
+    ├── agentpay-explainer.mp4   (~1:21)
+    └── agentpay-full.mp4        (~2:11, with live tail)
+```
+
+### Modifying the video
+
+1. **Change the narration** — edit the `SEGMENTS` list in `demo-video/gen_vo.py`.
+   Spell `402` as `x4-0-2` and `A.I.` with periods so the voice reads them correctly;
+   keep "secure wallet" / "USD" (no vendor names). Voice is `VOICE="Charon"` (male;
+   alts: Puck, Fenrir, Orus). Regenerate:
+   ```bash
+   cd demo-video
+   GEMINI_API_KEY='<key>' python3 gen_vo.py && cp /tmp/vo/*.wav vo/
+   ```
+   It prints each segment's duration — you need those for step 3.
+2. **Change the slides** — edit `demo-video/deck/deck.html` (scenes: title, onramp,
+   custody, x402, arch, close, live, demo). Re-render one scene:
+   ```bash
+   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new \
+     --window-size=1280,720 --virtual-time-budget=4000 \
+     --screenshot=deck/frames/x402.png "file://$PWD/deck/deck.html?s=x402"
+   ```
+3. **Re-assemble the explainer** — in `demo-video/deck/build.sh`, the slide `duration`
+   lines (the `ilist.txt` block) must sum to the narration length and track the segment
+   each slide narrates, so update them whenever the narration changes. Then:
+   ```bash
+   cd demo-video/deck && ./build.sh      # → agentpay-explainer.mp4
+   ```
+4. **Re-stitch the live tail** — normalize explainer + "Live" card + live recording to
+   1280×720 / 30fps / 48k-stereo, then concat → `agentpay-full.mp4` (see
+   `demo-video/README.md` step 4 for the exact ffmpeg commands).
+
+Shortcut: `cd demo-video && ./rebuild.sh` re-renders slides + explainer in one go
+(add `--voice` to also regenerate the narration). Full details in
+[`demo-video/README.md`](demo-video/README.md).
 
 ## Security
 
