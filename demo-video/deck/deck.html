@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1280, height=720" />
+<title>AgentPay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0A0B10; --bg2:#0E1017; --ink:#F4F5FA; --mut:#9AA0B4; --line:#20232E;
+    --brand:#6366F1; --brand2:#A855F7; --pp:#0070E0; --grn:#34D399; --amber:#FBBF24;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1280px;height:720px;overflow:hidden}
+  body{
+    background:
+      radial-gradient(1200px 600px at 78% -10%, rgba(99,102,241,.22), transparent 60%),
+      radial-gradient(900px 500px at 10% 110%, rgba(168,85,247,.16), transparent 55%),
+      var(--bg);
+    color:var(--ink); font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  .scene{width:1280px;height:720px;padding:84px 96px;display:none;flex-direction:column;position:relative}
+  .scene.on{display:flex}
+  .eyebrow{font-size:15px;font-weight:700;letter-spacing:.22em;color:var(--brand2);text-transform:uppercase;margin-bottom:26px;display:flex;align-items:center;gap:12px}
+  .eyebrow .n{color:var(--mut)}
+  h1{font-size:76px;line-height:1.02;font-weight:800;letter-spacing:-.025em}
+  h2{font-size:52px;line-height:1.08;font-weight:800;letter-spacing:-.02em;max-width:980px}
+  .lead{font-size:25px;line-height:1.5;color:var(--mut);max-width:880px;margin-top:26px;font-weight:450}
+  .lead b{color:var(--ink);font-weight:650}
+  .grow{flex:1}
+  .chips{display:flex;gap:12px;margin-top:8px}
+  .chip{font-size:15px;font-weight:650;padding:9px 18px;border:1px solid var(--line);border-radius:999px;color:var(--ink);background:rgba(255,255,255,.02)}
+  .chip .d{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:9px;vertical-align:middle}
+  .brandword{background:linear-gradient(100deg,var(--brand),var(--brand2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .logo{position:absolute;top:84px;right:96px;font-weight:800;font-size:19px;letter-spacing:-.01em;color:var(--ink);display:flex;align-items:center;gap:10px}
+  .logo .mk{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--brand),var(--brand2))}
+
+  /* pipeline */
+  .pipe{display:flex;align-items:stretch;gap:0;margin-top:20px}
+  .node{flex:1;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:18px;padding:24px 22px;min-height:188px;display:flex;flex-direction:column}
+  .node .tag{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+  .node .nm{font-size:26px;font-weight:750;margin-top:12px;letter-spacing:-.01em}
+  .node .ds{font-size:15px;line-height:1.45;color:var(--mut);margin-top:10px}
+  .arrow{display:flex;align-items:center;justify-content:center;width:66px;color:var(--brand2);font-size:30px;flex:0 0 66px}
+  .accent-pp{color:#4DA9FF}.accent-tw{color:#C4B5FD}.accent-x{color:#6EE7B7}
+
+  /* sequence (x402) */
+  .seq{margin-top:26px;display:flex;flex-direction:column;gap:14px;max-width:1040px}
+  .row{display:flex;align-items:center;gap:18px}
+  .pill{font-size:17px;font-weight:650;padding:13px 20px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);display:flex;align-items:center;gap:12px}
+  .pill.code{font-family:'JetBrains Mono',monospace;font-weight:600}
+  .pill.err{border-color:rgba(251,191,36,.4);color:var(--amber);background:rgba(251,191,36,.07)}
+  .pill.ok{border-color:rgba(52,211,153,.4);color:var(--grn);background:rgba(52,211,153,.07)}
+  .ar{color:var(--mut);font-size:22px}
+  .lbl{font-size:16px;color:var(--mut)}
+
+  /* demo frame */
+  .demo{flex-direction:row;align-items:center;gap:60px;padding:72px 96px}
+  .demoL{width:320px;flex:0 0 320px}
+  .win{border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 40px 120px rgba(0,0,0,.6);background:#fff;display:inline-block}
+  .bar{height:42px;background:#F1F2F6;display:flex;align-items:center;padding:0 16px;gap:8px;border-bottom:1px solid #e4e6ec}
+  .bar i{width:12px;height:12px;border-radius:50%;display:inline-block}
+  .bar .u{margin-left:16px;font:12px 'JetBrains Mono',monospace;color:#8a90a0;background:#fff;border:1px solid #e4e6ec;border-radius:7px;padding:5px 12px}
+  .win img{display:block;height:538px;width:auto}
+  .cap{display:flex;flex-direction:column;align-items:flex-start;gap:20px}
+  .cap .step{font:700 14px 'Inter';letter-spacing:.14em;text-transform:uppercase;color:var(--brand2);background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);padding:8px 15px;border-radius:999px;white-space:nowrap}
+  .cap .txt{font-size:28px;font-weight:700;color:var(--ink);line-height:1.28;letter-spacing:-.01em}
+
+  .foot{position:absolute;left:96px;bottom:52px;font-size:15px;color:var(--mut)}
+  .pillars{display:flex;gap:16px;margin-top:30px}
+  .pcol{flex:1;border:1px solid var(--line);border-radius:18px;padding:26px 24px;background:rgba(255,255,255,.02)}
+  .pcol .k{font-size:14px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+  .pcol .v{font-size:23px;font-weight:750;margin-top:12px;letter-spacing:-.01em}
+  .pcol .s{font-size:15px;color:var(--mut);margin-top:9px;line-height:1.45}
+</style>
+</head>
+<body>
+
+<!-- 1 TITLE -->
+<section class="scene" data-s="title">
+  <div class="logo"><span class="mk"></span>AgentPay</div>
+  <div class="eyebrow">Agentic payments · PayPal × on-chain USD × x402</div>
+  <div class="grow" style="display:flex;flex-direction:column;justify-content:center">
+    <h1>A wallet for<br><span class="brandword">AI agents.</span></h1>
+    <p class="lead">Fund it once with PayPal. Your agent then pays for the services it needs — data, APIs, signals — <b>on its own</b>, settled on-chain over the x402 protocol.</p>
+  </div>
+  <div class="chips">
+    <span class="chip"><span class="d" style="background:#4DA9FF"></span>PayPal · fiat in</span>
+    <span class="chip"><span class="d" style="background:#C4B5FD"></span>secure wallet · custody & settlement</span>
+    <span class="chip"><span class="d" style="background:#6EE7B7"></span>x402 · pay-per-call</span>
+  </div>
+</section>
+
+<!-- 2 ONRAMP -->
+<section class="scene" data-s="onramp">
+  <div class="logo"><span class="mk"></span>AgentPay</div>
+  <div class="eyebrow"><span class="n">01</span> · Fiat on-ramp</div>
+  <h2>Fund the wallet with PayPal</h2>
+  <p class="lead">A human adds real dollars once, through a familiar checkout. This is the <b>only</b> step in the whole flow that needs human approval.</p>
+  <div class="grow"></div>
+  <div class="pipe">
+    <div class="node"><div class="tag">Human</div><div class="nm">You</div><div class="ds">Approve a one-time top-up in PayPal.</div></div>
+    <div class="arrow accent-pp">→</div>
+    <div class="node"><div class="tag accent-pp" style="color:#4DA9FF">PayPal · sandbox</div><div class="nm">$1.00 USD</div><div class="ds">Real dollars captured from your account.</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="tag">Destination</div><div class="nm">Agent wallet</div><div class="ds">Credited as on-chain USD, ready to spend.</div></div>
+  </div>
+</section>
+
+<!-- 3 CUSTODY -->
+<section class="scene" data-s="custody">
+  <div class="logo"><span class="mk"></span>AgentPay</div>
+  <div class="eyebrow"><span class="n">02</span> · Custody & bridge</div>
+  <h2>Dollars move on-chain as USD,<br>held in a secure wallet</h2>
+  <p class="lead">A treasury bridge moves the PayPal dollars on-chain as <b>digital US dollars</b>. A <b>secure wallet</b> takes custody and signs payments for the agent — the human never touches a private key.</p>
+  <div class="grow"></div>
+  <div class="pipe">
+    <div class="node"><div class="tag accent-pp" style="color:#4DA9FF">Fiat captured</div><div class="nm">PayPal $</div><div class="ds">Settled to the platform in USD.</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="tag">Treasury bridge</div><div class="nm">Dollars → on-chain USD</div><div class="ds">Moves the funds on-chain, 1:1 in USD.</div></div>
+    <div class="arrow accent-tw">→</div>
+    <div class="node"><div class="tag" style="color:#C4B5FD">Secure agent wallet</div><div class="nm">Custody + signer</div><div class="ds">Holds USD, signs every payment gaslessly.</div></div>
+  </div>
+</section>
+
+<!-- 4 X402 -->
+<section class="scene" data-s="x402">
+  <div class="logo"><span class="mk"></span>AgentPay</div>
+  <div class="eyebrow"><span class="n">03</span> · Pay-per-call</div>
+  <h2>The agent pays with x402</h2>
+  <p class="lead">Each service is a pay-per-call endpoint. No subscriptions, no cards — the agent settles micro-payments in USD, per request.</p>
+  <div class="seq">
+    <div class="row"><span class="pill">🤖 Agent</span><span class="ar">→</span><span class="pill code">GET /api/premium</span><span class="lbl">requests live data</span></div>
+    <div class="row"><span class="pill code err">402 Payment Required</span><span class="ar">→</span><span class="lbl">server quotes the price: <b style="color:#fff">$0.001</b></span></div>
+    <div class="row"><span class="pill" style="color:#C4B5FD;border-color:rgba(196,181,253,.35)">Agent wallet signs a USD payment</span><span class="ar">→</span><span class="lbl">settled gaslessly on-chain</span></div>
+    <div class="row"><span class="pill code ok">200 OK · data unlocked</span><span class="ar">→</span><span class="lbl">on-chain receipt returned</span></div>
+  </div>
+</section>
+
+<!-- 5 ARCHITECTURE -->
+<section class="scene" data-s="arch">
+  <div class="logo"><span class="mk"></span>AgentPay</div>
+  <div class="eyebrow">End-to-end architecture</div>
+  <h2 style="font-size:44px">Fiat in · crypto settles · agent spends</h2>
+  <div class="grow" style="display:flex;align-items:center">
+    <div class="pipe" style="width:100%">
+      <div class="node"><div class="tag accent-pp" style="color:#4DA9FF">On-ramp</div><div class="nm">PayPal</div><div class="ds">Human funds once, in dollars.</div></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="tag">Bridge</div><div class="nm">Treasury</div><div class="ds">Dollars → on-chain USD.</div></div>
+      <div class="arrow accent-tw">→</div>
+      <div class="node"><div class="tag" style="color:#C4B5FD">Custody</div><div class="nm">Secure wallet</div><div class="ds">Holds USD, signs payments.</div></div>
+      <div class="arrow accent-x">→</div>
+      <div class="node"><div class="tag" style="color:#6EE7B7">Pay-per-call</div><div class="nm">x402 → Services</div><div class="ds">Data, APIs, signals, books.</div></div>
+    </div>
+  </div>
+  <div class="foot">No human in the loop after funding — the agent pays autonomously, per request.</div>
+</section>
+
+<!-- 6 CLOSE -->
+<section class="scene" data-s="close">
+  <div class="logo"><span class="mk"></span>AgentPay</div>
+  <div class="eyebrow">The payment rail for agentic AI</div>
+  <div style="margin-top:4px"><h1 style="font-size:60px">Agents that pay<br>for themselves.</h1></div>
+  <div class="pillars">
+    <div class="pcol"><div class="k" style="color:#4DA9FF">PayPal</div><div class="v">Fiat in</div><div class="s">Fund once with a familiar checkout.</div></div>
+    <div class="pcol"><div class="k" style="color:#C4B5FD">On-chain USD</div><div class="v">Custody & settlement</div><div class="s">A secure wallet signs in USD, gaslessly.</div></div>
+    <div class="pcol"><div class="k" style="color:#6EE7B7">x402</div><div class="v">Autonomous pay-per-use</div><div class="s">Micro-payments, per request, no approvals.</div></div>
+  </div>
+  <div class="foot">Add it as an <b style="color:#fff">MCP</b> and your AI — like Claude — becomes the paying agent. No extra API key.</div>
+</section>
+
+<!-- LIVE TITLE CARD -->
+<section class="scene" data-s="live">
+  <div class="logo"><span class="mk"></span>AgentPay</div>
+  <div class="grow" style="display:flex;flex-direction:column;justify-content:center;align-items:flex-start">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:28px">
+      <span style="width:13px;height:13px;border-radius:50%;background:#F43F5E;box-shadow:0 0 0 6px rgba(244,63,94,.18)"></span>
+      <span style="font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#FB7185;font-size:16px">Live · unedited</span>
+    </div>
+    <h1>See it run,<br><span class="brandword">end to end.</span></h1>
+    <p class="lead">One console. Real PayPal funding, real on-chain payments — the agent does the rest.</p>
+  </div>
+</section>
+
+<!-- DEMO FRAME -->
+<section class="scene demo" data-s="demo">
+  <div class="demoL">
+    <div class="cap"><span class="step" id="dstep"></span><span class="txt" id="dtxt"></span></div>
+  </div>
+  <div class="win"><div class="bar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span class="u" id="durl">agentpay-test.carry.exchange/agent</span></div><img id="dimg" src="" /></div>
+</section>
+
+<script>
+  var q = new URLSearchParams(location.search);
+  var s = q.get('s') || 'title';
+  var el = document.querySelector('.scene[data-s="'+s+'"]');
+  if(el){ el.classList.add('on'); }
+  if(s==='demo'){
+    document.getElementById('dimg').src = q.get('img')||'';
+    document.getElementById('dstep').textContent = q.get('step')||'';
+    document.getElementById('dtxt').textContent = q.get('cap')||'';
+  }
+</script>
+</body>
+</html>

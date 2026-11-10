@@ -1,0 +1,6 @@
+file '../vo/s1.wav'
+file '../vo/s2.wav'
+file '../vo/s3.wav'
+file '../vo/s4.wav'
+file '../vo/s5.wav'
+file '../vo/s6.wav'

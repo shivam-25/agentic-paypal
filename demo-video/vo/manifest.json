@@ -1,0 +1,38 @@
+[
+  {
+    "id": "s1",
+    "wav": "/tmp/vo/s1.wav",
+    "dur": 8.531,
+    "text": "Meet AgentPay. It gives an autonomous A.I. agent its own wallet, so it can pay for the services it needs, entirely on its own."
+  },
+  {
+    "id": "s2",
+    "wav": "/tmp/vo/s2.wav",
+    "dur": 10.011,
+    "text": "First, the human funds the wallet once, using PayPal. You add real dollars through a familiar fiat on-ramp. This is the only step that needs your approval."
+  },
+  {
+    "id": "s3",
+    "wav": "/tmp/vo/s3.wav",
+    "dur": 15.091,
+    "text": "Those dollars don't stay in PayPal. A treasury bridge moves them on-chain as digital U.S. dollars, into a secure wallet that the agent controls. The wallet holds the funds and signs every payment, so the human never touches a private key."
+  },
+  {
+    "id": "s4",
+    "wav": "/tmp/vo/s4.wav",
+    "dur": 20.171,
+    "text": "Now the agent can spend. Every service is a pay-per-call endpoint guarded by the x4-0-2 protocol. When the agent requests data, the server answers: 4-0-2, Payment Required. The agent's wallet signs a U.S. dollar payment, settles it instantly on-chain, and the server unlocks the content."
+  },
+  {
+    "id": "s5",
+    "wav": "/tmp/vo/s5.wav",
+    "dur": 14.091,
+    "text": "From a single prompt, the agent checks its balance, browses the marketplace, and buys several services at once. A live Brent crude snapshot, and a momentum signal, each paid on-chain, with no further human approval."
+  },
+  {
+    "id": "s6",
+    "wav": "/tmp/vo/s6.wav",
+    "dur": 13.371,
+    "text": "Dollars in, through PayPal. Held and settled on-chain as U.S. dollars. Autonomous pay-per-use, through x4-0-2. That is AgentPay. The payment rail for agentic A.I."
+  }
+]

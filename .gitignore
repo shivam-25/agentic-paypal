@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.env.local
+*.tsbuildinfo
+next-env.d.ts
+
+# demo-video large intermediates (regenerable)
+demo-video/deck/narration.wav
+demo-video/deck/*.gif
+demo-video/deck/chk/
+demo-video/deck/chk_*.png
+demo-video/deck/norm_*.mp4
