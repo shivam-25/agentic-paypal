@@ -19,7 +19,36 @@ body {
   min-height: 100vh;
 }
 
-.wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 36px 24px 80px; }
+
+/* Shared top navigation */
+.sitenav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255,255,255,.82); backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.navinner {
+  max-width: 960px; margin: 0 auto; padding: 0 24px; height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.brand { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--ink); }
+.brandmark {
+  width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #fff; font-size: 14px;
+}
+.brandname { font-weight: 800; letter-spacing: -.01em; font-size: 15.5px; }
+.navlinks { display: flex; align-items: center; gap: 6px; }
+.navlink {
+  text-decoration: none; color: var(--muted); font-weight: 600; font-size: 14px;
+  padding: 7px 12px; border-radius: 9px;
+}
+.navlink:hover { color: var(--ink); background: var(--surface); }
+.navlink.on { color: var(--brand); background: #efeafb; }
+.envpill {
+  margin-left: 8px; font-size: 11px; font-weight: 700; letter-spacing: .04em; color: var(--muted);
+  background: var(--surface); border: 1px solid var(--line); padding: 5px 10px; border-radius: 999px;
+}
+@media (max-width: 560px) { .envpill { display: none; } }
 
 .hero { text-align: center; margin-bottom: 36px; }
 .hero .badge {

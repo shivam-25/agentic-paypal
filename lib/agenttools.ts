@@ -5,7 +5,7 @@ import { createOrder, captureOrder, getOrder } from "./paypal";
 import { disburse, treasuryConfigured } from "./treasury";
 import { canAutoPay, getLimits } from "./limits";
 import { linkPaypal } from "./account";
-import { recordPendingOrder, recordAutoPaidOrder, markOrderPaid, loadOrders } from "./orders";
+import { recordPendingOrder, recordAutoPaidOrder, markOrderPaid, loadOrders, recordFunding } from "./orders";
 
 const MERCHANT = process.env.AGENTPAY_DEMO_MERCHANT ?? STORE_NAME;
 
@@ -235,6 +235,7 @@ export async function runTool(name: string, args: any, origin: string): Promise<
           /* capture ok; credit retriable */
         }
       }
+      if (cap.status === "COMPLETED" && amountUSD) recordFunding(amountUSD);
       return { status: cap.status, amountUSD, credited };
     }
     case "pay_for_service": {

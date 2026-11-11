@@ -21,6 +21,7 @@ export default function Store() {
   const [busy, setBusy] = useState<string>("");
   const [state, setState] = useState<Record<string, Buy>>({});
   const [err, setErr] = useState<Record<string, string>>({});
+  const [activity, setActivity] = useState<any[]>([]);
 
   async function loadBalance() {
     try {
@@ -31,8 +32,17 @@ export default function Store() {
       setBalance("$0.00");
     }
   }
+  async function loadActivity() {
+    try {
+      const r = await fetch("/api/orders").then((x) => x.json());
+      setActivity(Array.isArray(r.orders) ? r.orders : []);
+    } catch {
+      /* ignore */
+    }
+  }
   useEffect(() => {
     loadBalance();
+    loadActivity();
     fetch("/api/limits").then((x) => x.json()).then((d) => setLimit(d.autoApproveLimitUSD)).catch(() => {});
   }, []);
 
@@ -48,6 +58,7 @@ export default function Store() {
       if (r.error) throw new Error(r.error);
       setState((s) => ({ ...s, [productId]: r }));
       loadBalance();
+      loadActivity();
     } catch (e: any) {
       setErr((x) => ({ ...x, [productId]: e?.message ?? String(e) }));
     } finally {
@@ -66,6 +77,7 @@ export default function Store() {
       if (r.error) throw new Error(r.error);
       setState((s) => ({ ...s, [productId]: { ...(s[productId] as any), done: r.completed } }));
       loadBalance();
+      loadActivity();
     } catch (e: any) {
       setErr((x) => ({ ...x, [productId]: e?.message ?? String(e) }));
     } finally {
@@ -143,6 +155,33 @@ export default function Store() {
         })}
       </div>
 
+      <section className="activity">
+        <div className="ahead">Recent activity</div>
+        {activity.length === 0 && <div className="aempty">No activity yet — log in and buy something.</div>}
+        {activity.map((o) => {
+          const funding = o.kind === "funding";
+          const paid = o.status === "paid";
+          return (
+            <div className="arow" key={o.id}>
+              <span className="aicon">{funding ? "＋" : paid ? "✓" : "⏳"}</span>
+              <div className="amain">
+                <div className="atitle">
+                  {funding ? "Wallet top-up" : o.item}
+                  {!funding && o.decidedBy === "agent" && <span className="atag">agent</span>}
+                  {!funding && o.auto && <span className="atag auto">auto-pay</span>}
+                </div>
+                <div className="asub">
+                  {funding ? "Funded via PayPal" : o.merchant}
+                  {" · "}
+                  {paid ? (funding || o.auto ? "paid" : "approved & captured") : "awaiting approval"}
+                </div>
+              </div>
+              <span className={"aamt" + (funding ? " plus" : "")}>{funding ? "+" : "−"}${o.amountUSD}</span>
+            </div>
+          );
+        })}
+      </section>
+
       <div className="foot">
         <b>PayPal</b> links & funds the wallet · the <b>wallet</b> buys goods · micro auto-pays, macro you approve · sandbox
       </div>
@@ -189,6 +228,27 @@ export default function Store() {
         .paidrow { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
         .pill { background: #e9f8ef; color: #137a3d; border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 700; }
         .perr { color: #b91c1c; font-size: 13px; margin-top: 10px; }
+        .activity {
+          background: #fff; border: 1px solid var(--line); border-radius: 16px;
+          padding: 8px 20px 12px; margin-top: 22px; box-shadow: 0 1px 2px rgba(26,19,39,.04);
+        }
+        .ahead { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; padding: 12px 0 6px; font-weight: 700; }
+        .aempty { color: var(--muted); font-size: 13.5px; padding: 6px 0 12px; }
+        .arow { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-top: 1px solid var(--line); }
+        .aicon {
+          width: 26px; height: 26px; flex: none; border-radius: 50%; display: grid; place-items: center;
+          background: var(--ok-bg); color: var(--ok); font-weight: 800; font-size: 13px;
+        }
+        .amain { flex: 1; min-width: 0; }
+        .atitle { font-weight: 700; font-size: 14.5px; display: flex; align-items: center; gap: 7px; }
+        .atag {
+          font-size: 10.5px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
+          color: var(--brand); background: #efeafb; padding: 2px 7px; border-radius: 999px;
+        }
+        .atag.auto { color: var(--ok); background: var(--ok-bg); }
+        .asub { color: var(--muted); font-size: 12.5px; margin-top: 1px; }
+        .aamt { font-weight: 800; font-size: 15px; color: var(--ink); }
+        .aamt.plus { color: var(--ok); }
         .foot { text-align: center; color: var(--muted); font-size: 13px; margin-top: 30px; }
         @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
       `}</style>

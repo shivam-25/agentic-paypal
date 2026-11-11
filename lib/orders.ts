@@ -19,6 +19,8 @@ export interface OrderRecord {
   auto?: boolean;
   decidedBy: "user" | "agent";
   reason?: string;
+  /** "funding" = a PayPal top-up of the wallet; otherwise a goods purchase. */
+  kind?: "purchase" | "funding";
 }
 
 const FILE = "orders.json";
@@ -44,6 +46,24 @@ export function recordAutoPaidOrder(o: Omit<OrderRecord, "status" | "createdAt" 
   const now = new Date().toISOString();
   const orders = loadOrders();
   orders.unshift({ ...o, status: "paid", auto: true, createdAt: now, paidAt: now });
+  save(orders);
+}
+
+/** Log a completed PayPal top-up of the wallet (shows in the activity feed). */
+export function recordFunding(amountUSD: string) {
+  const now = new Date().toISOString();
+  const orders = loadOrders();
+  orders.unshift({
+    id: "fund-" + Date.now(),
+    item: "Wallet top-up",
+    merchant: "PayPal",
+    amountUSD,
+    status: "paid",
+    decidedBy: "user",
+    kind: "funding",
+    createdAt: now,
+    paidAt: now,
+  });
   save(orders);
 }
 
