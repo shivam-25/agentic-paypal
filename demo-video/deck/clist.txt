@@ -1,3 +1,2 @@
-file 'norm_explainer.mp4'
-file 'norm_card.mp4'
+file 'norm_agentpay-explainer.mp4'
 file 'norm_tail.mp4'

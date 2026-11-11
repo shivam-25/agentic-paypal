@@ -14,3 +14,4 @@ demo-video/deck/norm_*.mp4
 # local demo state (orders, settings, linked account)
 .data/
 .DS_Store
+.env.local.bak*

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=1280, height=720" />
-<title>AgentPay</title>
+<title>Agentic PayPal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
@@ -46,13 +46,14 @@
   .arrow{display:flex;align-items:center;justify-content:center;width:66px;color:var(--brand2);font-size:30px;flex:0 0 66px}
   .accent-pp{color:#4DA9FF}.accent-tw{color:#C4B5FD}.accent-x{color:#6EE7B7}
 
-  /* sequence (x402) */
+  /* sequence */
   .seq{margin-top:26px;display:flex;flex-direction:column;gap:14px;max-width:1040px}
   .row{display:flex;align-items:center;gap:18px}
   .pill{font-size:17px;font-weight:650;padding:13px 20px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);display:flex;align-items:center;gap:12px}
   .pill.code{font-family:'JetBrains Mono',monospace;font-weight:600}
   .pill.err{border-color:rgba(251,191,36,.4);color:var(--amber);background:rgba(251,191,36,.07)}
   .pill.ok{border-color:rgba(52,211,153,.4);color:var(--grn);background:rgba(52,211,153,.07)}
+  .pill.pp{border-color:rgba(77,169,255,.45);color:#4DA9FF;background:rgba(77,169,255,.08)}
   .ar{color:var(--mut);font-size:22px}
   .lbl{font-size:16px;color:var(--mut)}
 
@@ -74,113 +75,112 @@
   .pcol .k{font-size:14px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
   .pcol .v{font-size:23px;font-weight:750;margin-top:12px;letter-spacing:-.01em}
   .pcol .s{font-size:15px;color:var(--mut);margin-top:9px;line-height:1.45}
+  .big{font-size:120px;font-weight:800;letter-spacing:-.03em;line-height:1}
+  .amt{color:var(--grn)}.amtamber{color:var(--amber)}
 </style>
 </head>
 <body>
 
-<!-- 1 TITLE -->
+<!-- 1 TITLE (s1) -->
 <section class="scene" data-s="title">
-  <div class="logo"><span class="mk"></span>AgentPay</div>
-  <div class="eyebrow">Agentic payments · PayPal × on-chain USD × x402</div>
+  <div class="logo"><span class="mk"></span>Agentic PayPal</div>
+  <div class="eyebrow">PayPal for the agentic economy</div>
   <div class="grow" style="display:flex;flex-direction:column;justify-content:center">
     <h1>A wallet for<br><span class="brandword">AI agents.</span></h1>
-    <p class="lead">Fund it once with PayPal. Your agent then pays for the services it needs — data, APIs, signals — <b>on its own</b>, settled on-chain over the x402 protocol.</p>
+    <p class="lead">Link your PayPal, and your agent gets a wallet it can use to <b>buy the things you need</b> — goods, data, APIs — on its own, paid in US dollars.</p>
   </div>
   <div class="chips">
-    <span class="chip"><span class="d" style="background:#4DA9FF"></span>PayPal · fiat in</span>
-    <span class="chip"><span class="d" style="background:#C4B5FD"></span>secure wallet · custody & settlement</span>
-    <span class="chip"><span class="d" style="background:#6EE7B7"></span>x402 · pay-per-call</span>
+    <span class="chip"><span class="d" style="background:#4DA9FF"></span>Log in with PayPal</span>
+    <span class="chip"><span class="d" style="background:#C4B5FD"></span>Agent buys goods</span>
+    <span class="chip"><span class="d" style="background:#6EE7B7"></span>Micro auto-pay · macro approval</span>
   </div>
 </section>
 
-<!-- 2 ONRAMP -->
-<section class="scene" data-s="onramp">
-  <div class="logo"><span class="mk"></span>AgentPay</div>
-  <div class="eyebrow"><span class="n">01</span> · Fiat on-ramp</div>
-  <h2>Fund the wallet with PayPal</h2>
-  <p class="lead">A human adds real dollars once, through a familiar checkout. This is the <b>only</b> step in the whole flow that needs human approval.</p>
+<!-- 2 LOGIN (s2) -->
+<section class="scene" data-s="login">
+  <div class="logo"><span class="mk"></span>Agentic PayPal</div>
+  <div class="eyebrow"><span class="n">01</span> · Log in with PayPal</div>
+  <h2>Your PayPal account is<br>the agent's wallet</h2>
+  <p class="lead">You log in with PayPal. The <b>email on your account</b> becomes the identity the agent's wallet is linked to. Fund it once, in dollars, and the agent is ready to spend.</p>
   <div class="grow"></div>
   <div class="pipe">
-    <div class="node"><div class="tag">Human</div><div class="nm">You</div><div class="ds">Approve a one-time top-up in PayPal.</div></div>
+    <div class="node"><div class="tag accent-pp" style="color:#4DA9FF">Log in</div><div class="nm">PayPal email</div><div class="ds">You sign in with the PayPal account you already have.</div></div>
     <div class="arrow accent-pp">→</div>
-    <div class="node"><div class="tag accent-pp" style="color:#4DA9FF">PayPal · sandbox</div><div class="nm">$1.00 USD</div><div class="ds">Real dollars captured from your account.</div></div>
+    <div class="node"><div class="tag">Linked</div><div class="nm">Agent wallet</div><div class="ds">A wallet is created for and linked to that email.</div></div>
     <div class="arrow">→</div>
-    <div class="node"><div class="tag">Destination</div><div class="nm">Agent wallet</div><div class="ds">Credited as on-chain USD, ready to spend.</div></div>
+    <div class="node"><div class="tag">Fund once</div><div class="nm">$ in USD</div><div class="ds">Top up in plain dollars; the wallet holds the balance.</div></div>
   </div>
 </section>
 
-<!-- 3 CUSTODY -->
-<section class="scene" data-s="custody">
-  <div class="logo"><span class="mk"></span>AgentPay</div>
-  <div class="eyebrow"><span class="n">02</span> · Custody & bridge</div>
-  <h2>Dollars move on-chain as USD,<br>held in a secure wallet</h2>
-  <p class="lead">A treasury bridge moves the PayPal dollars on-chain as <b>digital US dollars</b>. A <b>secure wallet</b> takes custody and signs payments for the agent — the human never touches a private key.</p>
-  <div class="grow"></div>
-  <div class="pipe">
-    <div class="node"><div class="tag accent-pp" style="color:#4DA9FF">Fiat captured</div><div class="nm">PayPal $</div><div class="ds">Settled to the platform in USD.</div></div>
-    <div class="arrow">→</div>
-    <div class="node"><div class="tag">Treasury bridge</div><div class="nm">Dollars → on-chain USD</div><div class="ds">Moves the funds on-chain, 1:1 in USD.</div></div>
-    <div class="arrow accent-tw">→</div>
-    <div class="node"><div class="tag" style="color:#C4B5FD">Secure agent wallet</div><div class="nm">Custody + signer</div><div class="ds">Holds USD, signs every payment gaslessly.</div></div>
-  </div>
-</section>
-
-<!-- 4 X402 -->
-<section class="scene" data-s="x402">
-  <div class="logo"><span class="mk"></span>AgentPay</div>
-  <div class="eyebrow"><span class="n">03</span> · Pay-per-call</div>
-  <h2>The agent pays with x402</h2>
-  <p class="lead">Each service is a pay-per-call endpoint. No subscriptions, no cards — the agent settles micro-payments in USD, per request.</p>
+<!-- 3 GOODS (s3) -->
+<section class="scene" data-s="goods">
+  <div class="logo"><span class="mk"></span>Agentic PayPal</div>
+  <div class="eyebrow"><span class="n">02</span> · Buy goods</div>
+  <h2>Built for buying things</h2>
+  <p class="lead">PayPal is a merchant business — so Agentic PayPal leads with <b>goods</b>. Ask the agent for something, and it browses the store and places the order, paying the merchant in US dollars.</p>
   <div class="seq">
-    <div class="row"><span class="pill">🤖 Agent</span><span class="ar">→</span><span class="pill code">GET /api/premium</span><span class="lbl">requests live data</span></div>
-    <div class="row"><span class="pill code err">402 Payment Required</span><span class="ar">→</span><span class="lbl">server quotes the price: <b style="color:#fff">$0.001</b></span></div>
-    <div class="row"><span class="pill" style="color:#C4B5FD;border-color:rgba(196,181,253,.35)">Agent wallet signs a USD payment</span><span class="ar">→</span><span class="lbl">settled gaslessly on-chain</span></div>
-    <div class="row"><span class="pill code ok">200 OK · data unlocked</span><span class="ar">→</span><span class="lbl">on-chain receipt returned</span></div>
+    <div class="row"><span class="pill">🧑 You</span><span class="ar">→</span><span class="lbl">"buy me a mug and a notebook set"</span></div>
+    <div class="row"><span class="pill">🤖 Agent</span><span class="ar">→</span><span class="pill code">browse_store → buy_product</span><span class="lbl">finds the items, places the order</span></div>
+    <div class="row"><span class="pill pp">Merchant paid in USD</span><span class="ar">→</span><span class="lbl">order logged, who-bought-what recorded</span></div>
   </div>
 </section>
 
-<!-- 5 ARCHITECTURE -->
-<section class="scene" data-s="arch">
-  <div class="logo"><span class="mk"></span>AgentPay</div>
-  <div class="eyebrow">End-to-end architecture</div>
-  <h2 style="font-size:44px">Fiat in · crypto settles · agent spends</h2>
-  <div class="grow" style="display:flex;align-items:center">
-    <div class="pipe" style="width:100%">
-      <div class="node"><div class="tag accent-pp" style="color:#4DA9FF">On-ramp</div><div class="nm">PayPal</div><div class="ds">Human funds once, in dollars.</div></div>
-      <div class="arrow">→</div>
-      <div class="node"><div class="tag">Bridge</div><div class="nm">Treasury</div><div class="ds">Dollars → on-chain USD.</div></div>
-      <div class="arrow accent-tw">→</div>
-      <div class="node"><div class="tag" style="color:#C4B5FD">Custody</div><div class="nm">Secure wallet</div><div class="ds">Holds USD, signs payments.</div></div>
-      <div class="arrow accent-x">→</div>
-      <div class="node"><div class="tag" style="color:#6EE7B7">Pay-per-call</div><div class="nm">x402 → Services</div><div class="ds">Data, APIs, signals, books.</div></div>
+<!-- 4 MICRO (s4) -->
+<section class="scene" data-s="micro">
+  <div class="logo"><span class="mk"></span>Agentic PayPal</div>
+  <div class="eyebrow"><span class="n">03</span> · Micro payment · pre-approved</div>
+  <h2>Small purchases pay<br>instantly — within your limit</h2>
+  <p class="lead">You set an automatic limit. A small, everyday purchase inside it is paid straight from the wallet, with <b>no interruption</b>. The agent can't raise its own limit.</p>
+  <div class="grow" style="display:flex;align-items:center;gap:56px">
+    <div><div class="big amt">≤ $20</div><div class="lbl" style="margin-top:10px">auto-pay limit (you set it)</div></div>
+    <div class="arrow accent-x" style="font-size:40px">→</div>
+    <div class="seq" style="margin-top:0">
+      <div class="row"><span class="pill">Notebook set · $12</span></div>
+      <div class="row"><span class="pill ok">✓ Paid from wallet — no prompt</span></div>
     </div>
   </div>
-  <div class="foot">No human in the loop after funding — the agent pays autonomously, per request.</div>
 </section>
 
-<!-- 6 CLOSE -->
-<section class="scene" data-s="close">
-  <div class="logo"><span class="mk"></span>AgentPay</div>
-  <div class="eyebrow">The payment rail for agentic AI</div>
-  <div style="margin-top:4px"><h1 style="font-size:60px">Agents that pay<br>for themselves.</h1></div>
-  <div class="pillars">
-    <div class="pcol"><div class="k" style="color:#4DA9FF">PayPal</div><div class="v">Fiat in</div><div class="s">Fund once with a familiar checkout.</div></div>
-    <div class="pcol"><div class="k" style="color:#C4B5FD">On-chain USD</div><div class="v">Custody & settlement</div><div class="s">A secure wallet signs in USD, gaslessly.</div></div>
-    <div class="pcol"><div class="k" style="color:#6EE7B7">x402</div><div class="v">Autonomous pay-per-use</div><div class="s">Micro-payments, per request, no approvals.</div></div>
+<!-- 5 MACRO (s5) -->
+<section class="scene" data-s="macro">
+  <div class="logo"><span class="mk"></span>Agentic PayPal</div>
+  <div class="eyebrow"><span class="n">04</span> · Macro payment · post-approval</div>
+  <h2>Big purchases ask for<br>your PayPal approval</h2>
+  <p class="lead">A purchase above your limit isn't paid silently. The agent hands you a <b>PayPal approval</b>; you confirm, and only then does the order settle. You stay in control of the big spends.</p>
+  <div class="grow" style="display:flex;align-items:center;gap:56px">
+    <div><div class="big amtamber">$39</div><div class="lbl" style="margin-top:10px">above the $20 limit</div></div>
+    <div class="arrow accent-x" style="font-size:40px">→</div>
+    <div class="seq" style="margin-top:0">
+      <div class="row"><span class="pill">Desk lamp · $39</span></div>
+      <div class="row"><span class="pill pp">Approve payment in PayPal ↗</span></div>
+      <div class="row"><span class="pill ok">✓ Approved → order settled</span></div>
+    </div>
   </div>
-  <div class="foot">Add it as an <b style="color:#fff">MCP</b> and your AI — like Claude — becomes the paying agent. No extra API key.</div>
+</section>
+
+<!-- 6 CLOSE (s6) -->
+<section class="scene" data-s="close">
+  <div class="logo"><span class="mk"></span>Agentic PayPal</div>
+  <div class="eyebrow">PayPal for the agentic economy</div>
+  <div style="margin-top:4px"><h1 style="font-size:60px">Agents that<br>shop for you.</h1></div>
+  <div class="pillars">
+    <div class="pcol"><div class="k" style="color:#4DA9FF">Log in with PayPal</div><div class="v">Wallet, linked</div><div class="s">Your PayPal email funds the agent in USD.</div></div>
+    <div class="pcol"><div class="k" style="color:#C4B5FD">Micro · pre-approved</div><div class="v">Small spends, instant</div><div class="s">Within your limit, paid from the wallet.</div></div>
+    <div class="pcol"><div class="k" style="color:#6EE7B7">Macro · post-approval</div><div class="v">Big spends, you confirm</div><div class="s">PayPal approval before it settles.</div></div>
+  </div>
+  <div class="foot">Agent or user can buy. Add it as an <b style="color:#fff">MCP</b> and Claude itself becomes the paying agent — no extra API key.</div>
 </section>
 
 <!-- LIVE TITLE CARD -->
 <section class="scene" data-s="live">
-  <div class="logo"><span class="mk"></span>AgentPay</div>
+  <div class="logo"><span class="mk"></span>Agentic PayPal</div>
   <div class="grow" style="display:flex;flex-direction:column;justify-content:center;align-items:flex-start">
     <div style="display:flex;align-items:center;gap:14px;margin-bottom:28px">
       <span style="width:13px;height:13px;border-radius:50%;background:#F43F5E;box-shadow:0 0 0 6px rgba(244,63,94,.18)"></span>
       <span style="font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#FB7185;font-size:16px">Live · unedited</span>
     </div>
     <h1>See it run,<br><span class="brandword">end to end.</span></h1>
-    <p class="lead">One console. Real PayPal funding, real on-chain payments — the agent does the rest.</p>
+    <p class="lead">The real store: a micro purchase paid from the wallet, and a macro purchase approved in PayPal.</p>
   </div>
 </section>
 
@@ -189,7 +189,7 @@
   <div class="demoL">
     <div class="cap"><span class="step" id="dstep"></span><span class="txt" id="dtxt"></span></div>
   </div>
-  <div class="win"><div class="bar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span class="u" id="durl">agentpay-test.carry.exchange/agent</span></div><img id="dimg" src="" /></div>
+  <div class="win"><div class="bar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span class="u" id="durl">localhost:4021/market</span></div><img id="dimg" src="" /></div>
 </section>
 
 <script>
@@ -201,6 +201,7 @@
     document.getElementById('dimg').src = q.get('img')||'';
     document.getElementById('dstep').textContent = q.get('step')||'';
     document.getElementById('dtxt').textContent = q.get('cap')||'';
+    if(q.get('url')) document.getElementById('durl').textContent = q.get('url');
   }
 </script>
 </body>

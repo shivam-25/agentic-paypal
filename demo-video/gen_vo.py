@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
-"""Generate AgentPay narration segments with Gemini TTS. Reads GEMINI_API_KEY from env."""
+"""Generate Agentic PayPal narration segments with Gemini TTS. Reads GEMINI_API_KEY from env.
+Writes .wav + manifest.json straight into ./vo next to this script."""
 import os, json, base64, wave, urllib.request, time
 
 KEY = os.environ["GEMINI_API_KEY"]
 MODEL = "gemini-2.5-flash-preview-tts"
 URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
 VOICE = "Charon"  # calm, clear narrator
-OUT = "/tmp/vo"
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vo")
 os.makedirs(OUT, exist_ok=True)
 
 SEGMENTS = [
-    ("s1", "Meet AgentPay. It gives an autonomous A.I. agent its own wallet, so it can pay for the services it needs, entirely on its own."),
-    ("s2", "First, the human funds the wallet once, using PayPal. You add real dollars through a familiar fiat on-ramp. This is the only step that needs your approval."),
-    ("s3", "Those dollars don't stay in PayPal. A treasury bridge converts them into on-chain stablecoin dollars, which land in a wallet managed by thirdweb. Thirdweb holds custody and signs payments for the agent, so the human never touches a private key."),
-    ("s4", "Now the agent can spend. Every service is a pay-per-call endpoint guarded by the x4-0-2 protocol. When the agent requests data, the server answers: 4-0-2, Payment Required. The agent's wallet signs a stablecoin payment, settles it gaslessly on Arbitrum, and the server unlocks the content."),
-    ("s5", "From a single prompt, the agent checks its balance, browses the marketplace, and buys several services at once. A live Brent crude snapshot, and a momentum signal, each paid on-chain, with no further human approval."),
-    ("s6", "Fiat in, through PayPal. Custody and settlement, through thirdweb. Autonomous pay-per-use, through x4-0-2. That is AgentPay. The payment rail for agentic A.I."),
+    ("s1", "Meet Agentic PayPal. It gives an autonomous A.I. agent a wallet linked to your PayPal account, so it can buy the things you need — on its own."),
+    ("s2", "First, you log in with PayPal. The email on your PayPal account becomes the identity your agent's wallet is linked to. You fund it once, in dollars, and the agent is ready to spend."),
+    ("s3", "PayPal is a merchant business, so Agentic PayPal is built for buying goods. Ask the agent for something, and it browses the store and places the order, paying in U.S. dollars."),
+    ("s4", "But not every purchase is equal, so you set a limit. A small, everyday purchase inside your limit is paid instantly from the wallet, with no interruption. This is the micro payment. Pre-approved."),
+    ("s5", "A larger purchase needs your sign-off. The agent hands you a PayPal approval, you confirm, and only then does the order settle. This is the macro payment. Post-approval. You stay in control of the big spends."),
+    ("s6", "And it works both ways. You can buy from the store yourself, or hand the agent a goal and let it choose, with every order logged. Dollars in, through PayPal. Goods out, autonomously. That is Agentic PayPal. PayPal for the agentic economy."),
 ]
 
 def tts(text):

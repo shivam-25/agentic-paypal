@@ -10,28 +10,20 @@ ffmpeg -y -f concat -safe 0 -i alist.txt -ar 48000 -ac 2 narration.wav 2>/dev/nu
 ADUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 narration.wav)
 echo "narration duration: $ADUR"
 
-# 2) Image timeline (durations sum to ~81.46s = narration). Last slide padded; -shortest trims.
+# 2) Image timeline — one slide per narration segment (durations ≈ segment lengths).
 cat > ilist.txt <<EOF
 file '$F/title.png'
-duration 8.53
-file '$F/onramp.png'
-duration 5.00
-file '$F/d3.png'
-duration 5.01
-file '$F/custody.png'
-duration 15.09
-file '$F/x402.png'
-duration 20.17
-file '$F/d1.png'
-duration 4.70
-file '$F/d2.png'
-duration 4.70
-file '$F/d4.png'
-duration 4.69
-file '$F/arch.png'
-duration 6.50
+duration 11.09
+file '$F/login.png'
+duration 11.21
+file '$F/goods.png'
+duration 11.13
+file '$F/micro.png'
+duration 13.89
+file '$F/macro.png'
+duration 14.09
 file '$F/close.png'
-duration 8.00
+duration 15.89
 file '$F/close.png'
 EOF
 

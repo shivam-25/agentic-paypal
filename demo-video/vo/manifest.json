@@ -1,38 +1,38 @@
 [
   {
     "id": "s1",
-    "wav": "/tmp/vo/s1.wav",
-    "dur": 8.531,
-    "text": "Meet AgentPay. It gives an autonomous A.I. agent its own wallet, so it can pay for the services it needs, entirely on its own."
+    "wav": "/Users/code_rambo/Documents/go_projects/Bru/agent-pay-demo/demo-video/vo/s1.wav",
+    "dur": 11.091,
+    "text": "Meet Agentic PayPal. It gives an autonomous A.I. agent a wallet linked to your PayPal account, so it can buy the things you need \u2014 on its own."
   },
   {
     "id": "s2",
-    "wav": "/tmp/vo/s2.wav",
-    "dur": 10.011,
-    "text": "First, the human funds the wallet once, using PayPal. You add real dollars through a familiar fiat on-ramp. This is the only step that needs your approval."
+    "wav": "/Users/code_rambo/Documents/go_projects/Bru/agent-pay-demo/demo-video/vo/s2.wav",
+    "dur": 11.211,
+    "text": "First, you log in with PayPal. The email on your PayPal account becomes the identity your agent's wallet is linked to. You fund it once, in dollars, and the agent is ready to spend."
   },
   {
     "id": "s3",
-    "wav": "/tmp/vo/s3.wav",
-    "dur": 15.091,
-    "text": "Those dollars don't stay in PayPal. A treasury bridge moves them on-chain as digital U.S. dollars, into a secure wallet that the agent controls. The wallet holds the funds and signs every payment, so the human never touches a private key."
+    "wav": "/Users/code_rambo/Documents/go_projects/Bru/agent-pay-demo/demo-video/vo/s3.wav",
+    "dur": 11.131,
+    "text": "PayPal is a merchant business, so Agentic PayPal is built for buying goods. Ask the agent for something, and it browses the store and places the order, paying in U.S. dollars."
   },
   {
     "id": "s4",
-    "wav": "/tmp/vo/s4.wav",
-    "dur": 20.171,
-    "text": "Now the agent can spend. Every service is a pay-per-call endpoint guarded by the x4-0-2 protocol. When the agent requests data, the server answers: 4-0-2, Payment Required. The agent's wallet signs a U.S. dollar payment, settles it instantly on-chain, and the server unlocks the content."
+    "wav": "/Users/code_rambo/Documents/go_projects/Bru/agent-pay-demo/demo-video/vo/s4.wav",
+    "dur": 13.891,
+    "text": "But not every purchase is equal, so you set a limit. A small, everyday purchase inside your limit is paid instantly from the wallet, with no interruption. This is the micro payment. Pre-approved."
   },
   {
     "id": "s5",
-    "wav": "/tmp/vo/s5.wav",
+    "wav": "/Users/code_rambo/Documents/go_projects/Bru/agent-pay-demo/demo-video/vo/s5.wav",
     "dur": 14.091,
-    "text": "From a single prompt, the agent checks its balance, browses the marketplace, and buys several services at once. A live Brent crude snapshot, and a momentum signal, each paid on-chain, with no further human approval."
+    "text": "A larger purchase needs your sign-off. The agent hands you a PayPal approval, you confirm, and only then does the order settle. This is the macro payment. Post-approval. You stay in control of the big spends."
   },
   {
     "id": "s6",
-    "wav": "/tmp/vo/s6.wav",
-    "dur": 13.371,
-    "text": "Dollars in, through PayPal. Held and settled on-chain as U.S. dollars. Autonomous pay-per-use, through x4-0-2. That is AgentPay. The payment rail for agentic A.I."
+    "wav": "/Users/code_rambo/Documents/go_projects/Bru/agent-pay-demo/demo-video/vo/s6.wav",
+    "dur": 15.891,
+    "text": "And it works both ways. You can buy from the store yourself, or hand the agent a goal and let it choose, with every order logged. Dollars in, through PayPal. Goods out, autonomously. That is Agentic PayPal. PayPal for the agentic economy."
   }
 ]
