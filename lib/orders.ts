@@ -47,6 +47,11 @@ export function recordAutoPaidOrder(o: Omit<OrderRecord, "status" | "createdAt" 
   save(orders);
 }
 
+/** The most recent order still waiting on PayPal approval, if any. */
+export function latestAwaitingOrder(): OrderRecord | undefined {
+  return loadOrders().find((o) => o.status === "awaiting_approval");
+}
+
 /** Mark a logged order paid once PayPal has captured it. */
 export function markOrderPaid(id: string) {
   const orders = loadOrders();

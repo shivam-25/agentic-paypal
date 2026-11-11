@@ -15,3 +15,7 @@ demo-video/deck/norm_*.mp4
 .data/
 .DS_Store
 .env.local.bak*
+
+# raw screen-recording scratch (contains pre-fix error state)
+demo-video/deck/agentic-paypal-live-raw.gif
+demo-video/deck/done-beat.gif

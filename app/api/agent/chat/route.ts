@@ -78,7 +78,14 @@ export async function POST(request: Request) {
       } catch {
         /* ignore */
       }
-      const result = await runTool(c.function.name, args, origin);
+      let result: any;
+      try {
+        result = await runTool(c.function.name, args, origin);
+      } catch (e: any) {
+        // Surface the failure to the model as a tool result so it can explain
+        // the problem instead of the whole request 500-ing on an empty body.
+        result = { error: e?.message ?? String(e) };
+      }
       steps.push({ tool: c.function.name, args, result });
       convo.push({
         role: "tool",

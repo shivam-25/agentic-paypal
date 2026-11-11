@@ -39,13 +39,40 @@ export async function createOrder(amountUSD: string, description: string) {
   return json;
 }
 
+export async function getOrder(orderId: string) {
+  const token = await accessToken();
+  const res = await fetch(`${BASE}/v2/checkout/orders/${orderId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  const text = await res.text();
+  const json = text ? JSON.parse(text) : {};
+  if (!res.ok) throw new Error(`getOrder failed: ${JSON.stringify(json)}`);
+  return json;
+}
+
 export async function captureOrder(orderId: string) {
   const token = await accessToken();
   const res = await fetch(`${BASE}/v2/checkout/orders/${orderId}/capture`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
   });
-  const json = await res.json();
+  // PayPal sandbox sometimes returns an empty body (or a non-JSON blip) on an
+  // otherwise-successful capture, and 422 ORDER_ALREADY_CAPTURED on a retry —
+  // parse defensively and fall back to the order's actual status.
+  const text = await res.text();
+  let json: any = {};
+  try {
+    json = text ? JSON.parse(text) : {};
+  } catch {
+    json = {};
+  }
+  const alreadyCaptured =
+    res.status === 422 &&
+    JSON.stringify(json).includes("ORDER_ALREADY_CAPTURED");
+  if (res.ok && json?.status === "COMPLETED") return json;
+  if (res.ok && !json?.status) return await getOrder(orderId); // empty body → re-read
+  if (alreadyCaptured) return await getOrder(orderId); // idempotent retry
   if (!res.ok) throw new Error(`capture failed: ${JSON.stringify(json)}`);
   return json;
 }
