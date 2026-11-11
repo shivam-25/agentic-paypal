@@ -31,7 +31,7 @@ export const CATALOGUE: Item[] = [
   {
     id: "book",
     title: "“Agentic Payments” — Chapter 1",
-    vendor: "AgentPay Press",
+    vendor: "Agentic PayPal Press",
     blurb: "A premium ebook chapter unlocked per-read. No subscription, pay as you go.",
     priceUSD: "$0.001",
     path: "/api/book",

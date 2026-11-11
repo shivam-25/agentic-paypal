@@ -83,9 +83,9 @@ export default function Onboard() {
   return (
     <main className="wrap">
       <div className="hero">
-        <span className="badge">AgentPay · Setup</span>
+        <span className="badge">Agentic PayPal · Setup</span>
         <h1>Fund your agent wallet</h1>
-        <p>Add USD and your AI agent can start paying for services.</p>
+        <p>Add USD and your AI agent can start buying goods and services.</p>
       </div>
 
       <section className="card">

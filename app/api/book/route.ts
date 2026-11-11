@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     description: "Ebook chapter: Agentic Payments, Ch.1 (demo)",
     build: () => ({
       title: "Agentic Payments — Chapter 1: The Wallet Behind the Agent",
-      vendor: "AgentPay Press",
+      vendor: "Agentic PayPal Press",
       body: [
         "For decades software could read the web but never pay for it. An agent",
         "could find the report, the API, the book — and then stop, because the",

@@ -10,3 +10,7 @@ demo-video/deck/*.gif
 demo-video/deck/chk/
 demo-video/deck/chk_*.png
 demo-video/deck/norm_*.mp4
+
+# local demo state (orders, settings, linked account)
+.data/
+.DS_Store

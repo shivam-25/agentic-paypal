@@ -3,35 +3,37 @@
 import Link from "next/link";
 
 /**
- * AgentPay landing. Explains the product (an MCP that gives any AI agent a
- * wallet) and routes to the live proof: the marketplace and the PayPal funding.
+ * Agentic PayPal landing. Explains the product (an MCP that gives any AI agent a
+ * wallet linked to the user's PayPal) and routes to the live proof: the store,
+ * the agent console, and PayPal funding.
  */
 export default function Home() {
   return (
     <main className="wrap">
       <div className="hero">
-        <span className="badge">AgentPay</span>
+        <span className="badge">Agentic PayPal</span>
         <h1>Give your AI agent a wallet.</h1>
         <p>
-          Install the MCP, fund it once with PayPal, and your agent pays for
-          services on its own — data, APIs, books, compute. All in USD.
+          Log in with PayPal, fund it once, and your agent buys what you need on
+          its own — goods from a store, data, APIs. Small purchases pay instantly;
+          larger ones ask for your PayPal approval. All in USD.
         </p>
       </div>
 
       <div className="rails card">
         <div className="rail">
-          <b>PayPal</b>
-          <span>Money in. Fund the wallet in plain dollars (sandbox).</span>
+          <b>Log in with PayPal</b>
+          <span>Your PayPal email links the agent's wallet. Fund it in plain dollars.</span>
         </div>
         <div className="arrow">→</div>
         <div className="rail">
-          <b>thirdweb wallet</b>
-          <span>The agent's wallet holds USD and signs payments.</span>
+          <b>Agent buys goods</b>
+          <span>The agent's wallet holds USD and pays merchants for things you ask for.</span>
         </div>
         <div className="arrow">→</div>
         <div className="rail">
-          <b>x402</b>
-          <span>Pays any pay-per-call service automatically.</span>
+          <b>Micro / macro</b>
+          <span>Small purchases auto-pay within your limit; larger ones you approve.</span>
         </div>
       </div>
 
@@ -40,7 +42,7 @@ export default function Home() {
           Talk to the agent →
         </Link>
         <Link className="cta" href="/market">
-          Open the marketplace
+          Open the store
         </Link>
         <Link className="cta" href="/onboard">
           Fund a wallet
@@ -49,30 +51,31 @@ export default function Home() {
 
       <div className="card mcp">
         <div className="step-title">Add it to Claude or Codex</div>
-        <p className="step-sub2">Drop AgentPay into your MCP config — the host agent gets a wallet and five tools:</p>
+        <p className="step-sub2">Drop Agentic PayPal into your MCP config — the host agent gets a wallet and these tools:</p>
         <pre className="snippet">{`{
   "mcpServers": {
-    "agentpay": {
+    "agentic-paypal": {
       "command": "npx",
-      "args": ["-y", "agentpay-mcp"]
+      "args": ["-y", "agentic-paypal-mcp"]
     }
   }
 }`}</pre>
         <div className="tools">
-          <code>setup_wallet</code>
+          <code>link_paypal</code>
           <code>get_balance</code>
+          <code>browse_store</code>
+          <code>buy_product</code>
+          <code>confirm_purchase</code>
           <code>fund_with_paypal</code>
-          <code>confirm_funding</code>
-          <code>pay_for_service</code>
         </div>
         <p className="step-sub2">
-          No LLM key needed — the host agent is the AI. AgentPay only needs a thirdweb key
+          No LLM key needed — the host agent is the AI. Agentic PayPal only needs a thirdweb key
           and PayPal sandbox credentials.
         </p>
       </div>
 
       <div className="foot">
-        <b>PayPal</b> funds in · <b>thirdweb</b> wallet spends · <b>x402</b> settles · all in USD
+        <b>PayPal</b> links & funds · <b>wallet</b> buys goods · <b>micro/macro</b> limits · all in USD
       </div>
 
       <style jsx>{`

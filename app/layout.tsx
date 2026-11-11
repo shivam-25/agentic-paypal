@@ -3,9 +3,9 @@ import { Providers } from "./providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Agent Pay — Web2 to Crypto Payment Demo",
+  title: "Agentic PayPal — a wallet for AI agents",
   description:
-    "Sign in with Google, get a non-custodial wallet, pay via x402 (HTTP 402) stablecoin.",
+    "Link your PayPal, give an AI agent a wallet, and let it buy goods and services — small purchases auto-paid, larger ones approved in PayPal.",
 };
 
 export default function RootLayout({

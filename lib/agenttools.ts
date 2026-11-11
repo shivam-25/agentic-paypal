@@ -1,16 +1,35 @@
 import { CATALOGUE, itemById } from "./catalogue";
+import { PRODUCTS, STORE_NAME, productById } from "./store";
 import { agentBuy, agentUsdBalance } from "./agentpayer";
 import { createOrder, captureOrder } from "./paypal";
 import { disburse, treasuryConfigured } from "./treasury";
+import { canAutoPay, getLimits } from "./limits";
+import { linkPaypal } from "./account";
+import { recordPendingOrder, recordAutoPaidOrder, markOrderPaid } from "./orders";
+
+const MERCHANT = process.env.AGENTPAY_DEMO_MERCHANT ?? STORE_NAME;
 
 /**
- * The AgentPay tools, exposed to an LLM via OpenRouter function-calling. These
- * are the same capabilities as the MCP server (get_balance, browse_market,
- * fund_with_paypal, confirm_funding, pay_for_service) so the in-browser agent
- * behaves exactly like the agent inside Claude Desktop.
+ * The Agentic PayPal tools, exposed to an LLM via OpenRouter function-calling.
+ * These are the same capabilities as the MCP server (link_paypal, browse_store,
+ * buy_product, confirm_purchase, plus the x402 service tools) so the in-browser
+ * agent behaves exactly like the agent inside Claude Desktop.
  */
 
 export const TOOLS = [
+  {
+    type: "function",
+    function: {
+      name: "link_paypal",
+      description:
+        "Log in / link the user's PayPal account by email. Call this first. The agent wallet is linked to this PayPal email; purchases run through it.",
+      parameters: {
+        type: "object",
+        properties: { email: { type: "string", description: "The user's PayPal email." } },
+        required: ["email"],
+      },
+    },
+  },
   {
     type: "function",
     function: {
@@ -22,8 +41,47 @@ export const TOOLS = [
   {
     type: "function",
     function: {
+      name: "browse_store",
+      description:
+        "List the goods for sale in the merchant store, with id, name and USD price, plus the automatic-payment limit.",
+      parameters: { type: "object", properties: {} },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "buy_product",
+      description:
+        "Buy a product from the store by id. If the total is within the user's automatic limit it is paid from the wallet right away (micro); otherwise a PayPal approval link is returned and the user must approve, then call confirm_purchase (macro). Set decidedBy to 'agent' with a reason when you chose the purchase yourself for a task the user gave.",
+      parameters: {
+        type: "object",
+        properties: {
+          productId: { type: "string", description: "A product id from browse_store." },
+          qty: { type: "number", description: "Quantity (default 1)." },
+          decidedBy: { type: "string", enum: ["user", "agent"], description: "Who chose this. Default 'user'." },
+          reason: { type: "string", description: "Why the agent chose this, when decidedBy is 'agent'." },
+        },
+        required: ["productId"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "confirm_purchase",
+      description: "Capture a PayPal purchase the user has approved, completing a macro (above-limit) order.",
+      parameters: {
+        type: "object",
+        properties: { orderId: { type: "string" } },
+        required: ["orderId"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
       name: "browse_market",
-      description: "List the services the agent can buy, with id, title, vendor and USD price.",
+      description: "List the x402 data services the agent can buy, with id, title, vendor and USD price.",
       parameters: { type: "object", properties: {} },
     },
   },
@@ -69,8 +127,64 @@ export const TOOLS = [
 
 export async function runTool(name: string, args: any, origin: string): Promise<any> {
   switch (name) {
+    case "link_paypal": {
+      const email = String(args.email ?? "").trim();
+      if (!email || !email.includes("@")) return { error: "Provide the user's PayPal email." };
+      const account = linkPaypal(email);
+      const { usd } = await agentUsdBalance().catch(() => ({ usd: "$0.00" }));
+      return { linked: true, email: account.email, address: account.address, balanceUSD: usd };
+    }
     case "get_balance":
       return await agentUsdBalance();
+    case "browse_store": {
+      const { autoApproveLimitUSD } = getLimits();
+      return {
+        store: MERCHANT,
+        autoApproveLimitUSD,
+        products: PRODUCTS.map((p) => ({ id: p.id, name: p.name, priceUSD: p.priceUSD, emoji: p.emoji })),
+      };
+    }
+    case "buy_product": {
+      const product = productById(args.productId);
+      if (!product) return { error: `Unknown product "${args.productId}". Call browse_store first.` };
+      const qty = Number(args.qty) > 0 ? Math.floor(Number(args.qty)) : 1;
+      const total = Number(product.priceUSD) * qty;
+      const totalUSD = total.toFixed(2);
+      const item = `${qty}× ${product.name}`;
+      const decidedBy: "user" | "agent" = args.decidedBy === "agent" ? "agent" : "user";
+      const reason = args.reason ? String(args.reason) : undefined;
+
+      const check = await canAutoPay(total);
+      if (check.ok) {
+        const id = `auto-${Date.now()}`;
+        // Micro purchase: paid from the pre-funded wallet, no approval.
+        recordAutoPaidOrder({ id, item, merchant: MERCHANT, amountUSD: totalUSD, decidedBy, reason });
+        return { mode: "auto", paid: true, item, amountUSD: totalUSD, merchant: MERCHANT, decidedBy, reason };
+      }
+
+      // Macro purchase: needs PayPal approval.
+      const order: any = await createOrder(totalUSD, `Agentic PayPal: ${item} from ${MERCHANT}`);
+      const approveUrl = (order.links ?? []).find((l: any) => l.rel === "approve")?.href;
+      recordPendingOrder({ id: order.id, item, merchant: MERCHANT, amountUSD: totalUSD, approveUrl, decidedBy, reason });
+      return {
+        mode: "approval",
+        paid: false,
+        orderId: order.id,
+        item,
+        amountUSD: totalUSD,
+        merchant: MERCHANT,
+        reason: check.reason,
+        approveUrl,
+        decidedBy,
+        note: "Tell the human to click Approve payment in PayPal, then call confirm_purchase with orderId.",
+      };
+    }
+    case "confirm_purchase": {
+      const cap = await captureOrder(args.orderId);
+      const amountUSD = cap?.purchase_units?.[0]?.payments?.captures?.[0]?.amount?.value;
+      if (cap.status === "COMPLETED") markOrderPaid(args.orderId);
+      return { status: cap.status, amountUSD, completed: cap.status === "COMPLETED" };
+    }
     case "browse_market":
       return CATALOGUE.map((i) => ({
         id: i.id,
@@ -80,7 +194,7 @@ export async function runTool(name: string, args: any, origin: string): Promise<
       }));
     case "fund_with_paypal": {
       const amt = Number(String(args.amountUSD ?? "1").replace(/[$,\s]/g, "")).toFixed(2);
-      const order: any = await createOrder(amt, "AgentPay wallet top-up");
+      const order: any = await createOrder(amt, "Agentic PayPal wallet top-up");
       const approveUrl = (order.links ?? []).find((l: any) => l.rel === "approve")?.href;
       return {
         orderId: order.id,

@@ -1,8 +1,8 @@
 import { TOOLS, runTool } from "@/lib/agenttools";
 
 /**
- * In-browser AgentPay agent. An OpenRouter LLM with function-calling drives the
- * same AgentPay tools the MCP exposes. It loops: the model decides which tool to
+ * In-browser Agentic PayPal agent. An OpenRouter/Gemini LLM with function-calling
+ * drives the same tools the MCP exposes. It loops: the model decides which tool to
  * call, we run it, feed the result back, until the model answers. Returns the
  * full transcript (assistant text + tool calls + results) so the UI can show it.
  */
@@ -17,14 +17,20 @@ const OR_URL = GEMINI
 const MODEL =
   process.env.AGENT_MODEL ?? (GEMINI ? "gemini-3.6-flash" : "nvidia/nemotron-3.5-lightning:free");
 
-const SYSTEM = `You are AgentPay, an AI agent with your own crypto wallet. You can check your
-balance, browse a marketplace, fund the wallet via PayPal, and buy services — all in USD.
-When the user asks to buy something, call browse_market if you don't know the item ids, then
-pay_for_service. To add funds, call fund_with_paypal; the UI shows an "approve payment" button
-from the tool result — tell the human to click that button to approve (NEVER write a URL
-yourself; you do not know it). After they say they've approved, call confirm_funding with the
-orderId. Keep replies short and concrete. Always report the USD amounts, and after a purchase
-summarize what was unlocked.`;
+const SYSTEM = `You are Agentic PayPal, an AI agent with a wallet linked to the user's PayPal
+account. You can log the user in (link_paypal), check the balance, buy goods from the merchant
+store, fund the wallet via PayPal, and also buy x402 data services — all in USD.
+
+If the user hasn't linked PayPal yet and you need to, call link_paypal with their email.
+To buy goods: call browse_store for ids/prices, then buy_product. A purchase within the user's
+automatic limit is paid from the wallet instantly (micro) — just confirm it. A larger purchase
+(macro) returns a PayPal approval: the UI shows an "Approve payment" button from the tool result,
+so tell the human to click it (NEVER write a URL yourself), and after they approve call
+confirm_purchase with the orderId. When you decide a purchase yourself for a goal the user gave,
+pass decidedBy:"agent" and a short reason.
+To add funds, call fund_with_paypal, have the human click Approve, then confirm_funding.
+For data services, use browse_market then pay_for_service. Keep replies short and concrete,
+always report USD amounts, and say whether a purchase was auto-paid or needs approval.`;
 
 type Msg = { role: string; content?: any; tool_calls?: any[]; tool_call_id?: string; name?: string };
 
@@ -49,7 +55,7 @@ export async function POST(request: Request) {
         Authorization: `Bearer ${key}`,
         "Content-Type": "application/json",
         "HTTP-Referer": origin,
-        "X-Title": "AgentPay",
+        "X-Title": "Agentic PayPal",
       },
       body: JSON.stringify({ model: MODEL, messages: convo, tools: TOOLS, tool_choice: "auto" }),
     });

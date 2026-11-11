@@ -3,29 +3,62 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * AgentPay Agent Console — a chat box backed by an LLM (OpenRouter) that drives
- * the real AgentPay tools. Type a prompt; the agent browses, funds, and buys on
- * its own, showing each tool call. This is the MCP agent experience, in-browser.
+ * Agentic PayPal Agent Console — a chat box backed by an LLM that drives the real
+ * Agentic PayPal tools. Type a prompt; the agent logs in with PayPal, buys goods,
+ * funds the wallet, and pays — showing each tool call. The MCP experience, in-browser.
  */
 
 type Step = { tool: string; args: any; result: any };
 type Turn = { role: "user" | "agent"; text: string; steps?: Step[] };
 
 const SUGGESTIONS = [
-  "What's my balance and what can I buy?",
-  "Load $1 into my wallet with PayPal.",
-  "Buy the live BRENT snapshot and show me what you got.",
+  "Log me in with jo@example.com and show the store.",
+  "Buy me a mug and a notebook set.",
+  "I need a desk lamp for my home office — order it.",
 ];
 
 export default function AgentConsole() {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
+  const [limit, setLimit] = useState<number | null>(null);
+  const [linkedEmail, setLinkedEmail] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [turns, busy]);
+
+  // Load the current auto-pay limit.
+  useEffect(() => {
+    fetch("/api/limits")
+      .then((x) => x.json())
+      .then((d) => setLimit(d.autoApproveLimitUSD))
+      .catch(() => {});
+  }, []);
+
+  // Track the linked PayPal email from any link_paypal tool result.
+  useEffect(() => {
+    for (const t of turns) {
+      for (const s of t.steps ?? []) {
+        if (s.tool === "link_paypal" && s.result?.email) setLinkedEmail(s.result.email);
+      }
+    }
+  }, [turns]);
+
+  async function saveLimit(value: number) {
+    setLimit(value);
+    try {
+      const d = await fetch("/api/limits", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ autoApproveLimitUSD: value }),
+      }).then((x) => x.json());
+      setLimit(d.autoApproveLimitUSD);
+    } catch {
+      /* ignore */
+    }
+  }
 
   async function send(text: string) {
     if (!text.trim() || busy) return;
@@ -54,9 +87,26 @@ export default function AgentConsole() {
   return (
     <main className="wrap">
       <div className="hero">
-        <span className="badge">AgentPay · Agent Console</span>
+        <span className="badge">Agentic PayPal · Agent Console</span>
         <h1>Tell the agent what to buy</h1>
-        <p>An AI agent with its own wallet. It browses, funds via PayPal, and pays — in USD.</p>
+        <p>An AI agent with a wallet linked to your PayPal. It buys goods and services — in USD.</p>
+        <div className="controls">
+          <span className={`chip ${linkedEmail ? "on" : ""}`}>
+            {linkedEmail ? `PayPal: ${linkedEmail}` : "PayPal: not linked"}
+          </span>
+          <label className="limit">
+            Auto-pay up to{" "}
+            <span className="limval">${(limit ?? 0).toFixed(0)}</span>
+            <input
+              type="range"
+              min={0}
+              max={50}
+              step={1}
+              value={limit ?? 0}
+              onChange={(e) => saveLimit(Number(e.target.value))}
+            />
+          </label>
+        </div>
       </div>
 
       <div className="chat">
@@ -73,14 +123,14 @@ export default function AgentConsole() {
 
         {turns.map((t, i) => (
           <div key={i} className={`turn ${t.role}`}>
-            <div className="who">{t.role === "user" ? "You" : "🤖 AgentPay"}</div>
+            <div className="who">{t.role === "user" ? "You" : "🤖 Agentic PayPal"}</div>
             {t.steps?.map((s, j) => (
               <ToolCard key={j} step={s} />
             ))}
             {t.text && <div className="bubble"><Markdown text={t.text} /></div>}
           </div>
         ))}
-        {busy && <div className="turn agent"><div className="who">🤖 AgentPay</div><div className="bubble dim">working…</div></div>}
+        {busy && <div className="turn agent"><div className="who">🤖 Agentic PayPal</div><div className="bubble dim">working…</div></div>}
         <div ref={endRef} />
       </div>
 
@@ -103,6 +153,13 @@ export default function AgentConsole() {
       </form>
 
       <style jsx>{`
+        .controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 14px; }
+        .chip { font-size: 12.5px; font-weight: 600; padding: 5px 12px; border-radius: 999px;
+          background: var(--surface); border: 1px solid var(--line); color: var(--muted); }
+        .chip.on { background: #e9f8ef; border-color: #b7e7c9; color: #137a3d; }
+        .limit { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); font-weight: 600; }
+        .limit .limval { color: var(--brand-2); font-weight: 800; }
+        .limit input[type="range"] { accent-color: var(--brand); width: 120px; }
         .chat { display: flex; flex-direction: column; gap: 16px; min-height: 240px; margin-bottom: 18px; }
         .empty { color: var(--muted); display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
         .sugg { background: #efeafb; color: var(--brand-2); border: 0; border-radius: 999px;
@@ -283,6 +340,48 @@ function ToolCard({ step }: { step: Step }) {
           <span className="args">{JSON.stringify(step.args)}</span>
         )}
       </div>
+      {step.tool === "link_paypal" && r.linked && (
+        <div className="kv">✓ Linked PayPal <b>{r.email}</b> · balance <b>{r.balanceUSD}</b></div>
+      )}
+      {step.tool === "browse_store" && Array.isArray(r.products) && (
+        <>
+          <ul className="items">
+            {r.products.map((p: any) => (
+              <li key={p.id}>
+                {p.emoji} <b>{p.name}</b> — <span className="price">${p.priceUSD}</span>{" "}
+                <code className="pid">{p.id}</code>
+              </li>
+            ))}
+          </ul>
+          <div className="kv dim2">Auto-pay up to ${Number(r.autoApproveLimitUSD).toFixed(2)} · larger needs approval</div>
+        </>
+      )}
+      {step.tool === "buy_product" && r.mode === "auto" && (
+        <div className="paid">
+          <div className="kv">✓ Bought <b>{r.item}</b> for <b>${r.amountUSD}</b> — paid automatically from the wallet</div>
+          <div className="kv dim2">
+            {r.merchant}
+            {r.decidedBy === "agent" && r.reason ? ` · agent chose this: ${r.reason}` : ""}
+          </div>
+        </div>
+      )}
+      {step.tool === "buy_product" && r.mode === "approval" && (
+        <div className="fundcard">
+          <div className="fundline">
+            <b>{r.item}</b> is <b>${r.amountUSD}</b> — needs approval ({r.reason})
+          </div>
+          {r.approveUrl && (
+            <a className="approvebtn" href={r.approveUrl} target="_blank" rel="noreferrer">
+              Approve payment in PayPal ↗
+            </a>
+          )}
+        </div>
+      )}
+      {step.tool === "confirm_purchase" && (
+        <div className="kv">
+          {r.completed ? <>✓ Purchase complete · <b>${r.amountUSD}</b> paid to the merchant</> : <>Order status: {r.status}</>}
+        </div>
+      )}
       {step.tool === "browse_market" && Array.isArray(r) && (
         <ul className="items">
           {r.map((i: any) => (
@@ -330,6 +429,9 @@ function ToolCard({ step }: { step: Step }) {
         .items { margin: 8px 0 0; padding-left: 18px; }
         .items li { margin: 3px 0; }
         .price { color: var(--brand); font-weight: 700; }
+        .pid { background: #fff; border: 1px solid var(--line); border-radius: 5px; padding: 0 5px;
+          font-size: 11px; font-family: ui-monospace, monospace; color: var(--muted); }
+        .dim2 { color: var(--muted); font-size: 12px; }
         .kv { margin-top: 8px; }
         .kv a { color: var(--brand-2); font-weight: 600; }
         .fundcard { margin-top: 8px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
