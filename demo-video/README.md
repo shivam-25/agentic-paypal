@@ -15,10 +15,14 @@ buy goods → micro auto-pay / macro PayPal approval), plus the live end-to-end 
                        `c1_login`..`c5_done` and their padded cards `dimg1`..`dimg5` (fed to `?s=demo`).
 - `deck/shots/`      — older store-page screenshots (g1..g4); superseded by `cshots/`.
 - `deck/build.sh`    — concats narration + lays slides on a timeline → `agentpay-explainer.mp4`.
-- `deck/build_tail.sh` — builds the live prompt-driven tail (live card + dg1..dg5) and concats it
-                       onto the explainer → `agentic-paypal-full-demo.mp4`.
+- `deck/agentic-paypal-live-e2e.gif` / `.mp4` — the **real end-to-end screen recording** captured
+                       with Claude-in-Chrome, driven by prompts like a normal user: landing →
+                       store dashboard → console login (wallet linked to the PayPal email) →
+                       micro auto-pay → macro PayPal approval → captured → updated dashboard.
+- `deck/build_tail.sh` — concats the explainer + "Live" card + the real recording →
+                       `agentic-paypal-full-demo.mp4`.
 - `deck/agentpay-explainer.mp4`     — narrated explainer (~1:19).
-- `deck/agentic-paypal-full-demo.mp4` — explainer + "Live" card + prompt-driven console tail (~1:41).
+- `deck/agentic-paypal-full-demo.mp4` — explainer + "Live" card + real live recording (~1:55).
 - `rebuild.sh`       — one-command re-render of slides + explainer (`--voice` also redoes narration).
 
 ## Scenes ↔ narration
@@ -37,16 +41,18 @@ close→s6 (15.9s). The live tail = `live` card + `demo` frames `dg1..dg5`, capt
      --screenshot=deck/frames/micro.png "file://$PWD/deck/deck.html?s=micro"`
 3. **Assemble** — in `deck/build.sh`, the slide `duration` lines (ilist.txt block) must sum to the
    narration length and track the segment each slide narrates. Then `cd deck && ./build.sh`.
-4. **Live tail (prompt-driven console)** — record the Agent Console at `/agent` while typing the
-   demo prompts (log in → "buy a notebook set" → "order the desk lamp" → approve in PayPal →
-   complete). Crop each clean beat into `deck/cshots/c1_login`..`c5_done`, pad them to uniform
-   cards `dimg1..dimg5`, render the captioned `demo` frames `dg1..dg5` via
-   `deck.html?s=demo&img=cshots/dimgN.png&step=&cap=&url=`, then run:
-   `cd deck && ./build_tail.sh`  (builds `tail.mp4`, normalizes both clips, concats →
+4. **Live recording (real, prompt-driven)** — record the browser end-to-end with Claude-in-Chrome
+   (or any screen recorder) while driving it like a user: open `/` → `/market` → `/agent`, type
+   "log me in with <email>", "buy me a notebook set" (micro auto-pay), "order the desk lamp" (macro
+   → approve the $39 in the PayPal sandbox) → "complete the order", then show `/market` updated.
+   Save it as `deck/agentic-paypal-live-e2e.gif`, convert to a normalized mp4
+   (`agentic-paypal-live-e2e.mp4`, 1280x720/30fps/48k-stereo), then run:
+   `cd deck && ./build_tail.sh`  (concats explainer + "Live" card + the recording →
    `agentic-paypal-full-demo.mp4`).
+   The older `cshots/` + `dg*` slideshow frames are kept for reference but no longer used.
 
 Or just run `./rebuild.sh` for the explainer (add `--voice` to also regenerate narration), then
-`deck/build_tail.sh` for the tail + final concat.
+`deck/build_tail.sh` for the final concat with the recording.
 
 ## Security
 Rotate the Gemini / PayPal / thirdweb keys after the hackathon. Never commit keys —

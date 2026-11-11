@@ -1,11 +1,11 @@
 import { CATALOGUE, itemById } from "./catalogue";
 import { PRODUCTS, STORE_NAME, productById } from "./store";
 import { agentBuy, agentUsdBalance } from "./agentpayer";
-import { createOrder, captureOrder } from "./paypal";
+import { createOrder, captureOrder, getOrder } from "./paypal";
 import { disburse, treasuryConfigured } from "./treasury";
 import { canAutoPay, getLimits } from "./limits";
 import { linkPaypal } from "./account";
-import { recordPendingOrder, recordAutoPaidOrder, markOrderPaid, latestAwaitingOrder, loadOrders } from "./orders";
+import { recordPendingOrder, recordAutoPaidOrder, markOrderPaid, loadOrders } from "./orders";
 
 const MERCHANT = process.env.AGENTPAY_DEMO_MERCHANT ?? STORE_NAME;
 
@@ -180,19 +180,28 @@ export async function runTool(name: string, args: any, origin: string): Promise<
       };
     }
     case "confirm_purchase": {
-      // The caller (or the LLM) may pass a stale or made-up id — only trust an
-      // orderId that matches a real pending order; otherwise capture the most
-      // recent order still awaiting approval. Keeps the flow robust.
-      const pending = latestAwaitingOrder();
-      const orderId =
-        args.orderId && loadOrders().some((o) => o.id === args.orderId && o.status === "awaiting_approval")
-          ? args.orderId
-          : pending?.id ?? args.orderId;
-      if (!orderId) return { status: "NO_PENDING_ORDER", completed: false };
-      const cap = await captureOrder(orderId);
+      // The LLM may pass a stale/made-up id, or spuriously re-run buy_product and
+      // leave several pending orders. Capture the order PayPal actually reports as
+      // APPROVED (the one the user signed off on), not just the latest local one.
+      const awaiting = loadOrders().filter((o) => o.status === "awaiting_approval");
+      const candidates = [
+        ...(args.orderId && awaiting.some((o) => o.id === args.orderId) ? [args.orderId] : []),
+        ...awaiting.map((o) => o.id),
+      ];
+      let chosen: string | undefined;
+      for (const id of candidates) {
+        try {
+          const o = await getOrder(id);
+          if (o?.status === "APPROVED" || o?.status === "COMPLETED") { chosen = id; break; }
+        } catch {
+          /* skip ids PayPal doesn't know */
+        }
+      }
+      if (!chosen) return { status: "AWAITING_APPROVAL", completed: false, note: "No approved order found yet." };
+      const cap = await captureOrder(chosen);
       const amountUSD = cap?.purchase_units?.[0]?.payments?.captures?.[0]?.amount?.value;
-      if (cap.status === "COMPLETED") markOrderPaid(orderId);
-      return { orderId, status: cap.status, amountUSD, completed: cap.status === "COMPLETED" };
+      if (cap.status === "COMPLETED") markOrderPaid(chosen);
+      return { orderId: chosen, status: cap.status, amountUSD, completed: cap.status === "COMPLETED" };
     }
     case "browse_market":
       return CATALOGUE.map((i) => ({

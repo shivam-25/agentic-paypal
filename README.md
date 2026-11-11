@@ -17,6 +17,15 @@ Log in with PayPal (email → wallet)  →  fund in USD  →  agent/user buys go
    small → auto-paid from wallet        large → approved in PayPal
 ```
 
+## Live demo
+
+A real, prompt-driven run (landing → store dashboard → log in / link wallet → micro auto-pay →
+macro PayPal approval → captured → updated dashboard):
+
+![Agentic PayPal — end-to-end live demo](demo-video/deck/agentic-paypal-live-e2e.gif)
+
+Full narrated video: [`demo-video/deck/agentic-paypal-full-demo.mp4`](demo-video/deck/agentic-paypal-full-demo.mp4) (~1:55).
+
 ## Flow
 
 ```

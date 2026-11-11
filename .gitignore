@@ -19,3 +19,16 @@ demo-video/deck/norm_*.mp4
 # raw screen-recording scratch (contains pre-fix error state)
 demo-video/deck/agentic-paypal-live-raw.gif
 demo-video/deck/done-beat.gif
+
+# regenerable demo-video build intermediates
+demo-video/deck/norm_*.mp4
+demo-video/deck/live_card.mp4
+demo-video/deck/tail.mp4
+demo-video/deck/clist.txt
+demo-video/deck/tlist.txt
+demo-video/deck/alist.txt
+demo-video/deck/ilist.txt
+demo-video/deck/narration.wav
+
+# keep the real end-to-end recording (GitHub renders it inline)
+!demo-video/deck/agentic-paypal-live-e2e.gif
