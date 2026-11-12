@@ -32,3 +32,8 @@ demo-video/deck/narration.wav
 
 # keep the real end-to-end recording (GitHub renders it inline)
 !demo-video/deck/agentic-paypal-live-e2e.gif
+
+# demo-video live-v5 build intermediates
+demo-video/deck/segs/*/
+demo-video/deck/seg_out/
+demo-video/deck/segs/*.gif

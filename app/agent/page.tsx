@@ -37,6 +37,15 @@ export default function AgentConsole() {
       .catch(() => {});
   }, []);
 
+  // Hydrate the PayPal link done on the set-up screen, so the console opens
+  // already linked (PayPal: <email>) instead of "not linked".
+  useEffect(() => {
+    fetch("/api/account")
+      .then((x) => x.json())
+      .then((d) => d?.email && setLinkedEmail(d.email))
+      .catch(() => {});
+  }, []);
+
   // Track the linked PayPal email from any link_paypal tool result.
   useEffect(() => {
     for (const t of turns) {

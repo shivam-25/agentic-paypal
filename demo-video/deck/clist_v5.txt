@@ -1,0 +1,6 @@
+file 'norm_agentpay-explainer.mp4'
+file 'live_card.mp4'
+file 'seg_out/1.mp4'
+file 'seg_out/2.mp4'
+file 'seg_out/3.mp4'
+file 'seg_out/4.mp4'
