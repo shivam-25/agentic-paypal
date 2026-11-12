@@ -130,7 +130,20 @@ Shortcut: `cd demo-video && ./rebuild.sh` re-renders slides + explainer in one g
 (add `--voice` to also regenerate the narration). Full details in
 [`demo-video/README.md`](demo-video/README.md).
 
+## How this meets the PayPal AI Hackathon requirement
+
+- **PayPal (required):** the PayPal developer platform in the free **Sandbox** environment via the
+  **Orders API v2** — `create-order` / `capture-order` drive the macro (over-limit) approval flow, and
+  PayPal is also the identity (`link_paypal(email)` links the wallet to the user's PayPal email).
+- **AI (required):** an LLM agent (**Google Gemini**, or OpenRouter) runs a tool-calling loop over
+  `link_paypal`, `browse_store`, `get_balance`, `buy_product`, and `confirm_purchase` to decide and
+  execute purchases within the user-set spend limit (micro auto-pay vs. macro PayPal approval).
+
 ## Security
 
-The demo uses **sandbox / testnet** credentials only. Rotate any PayPal, LLM, or wallet
-key that is exposed, and keep this repo private.
+The demo uses **sandbox / testnet** credentials only. `.env.local` and `.data/` are gitignored —
+never commit keys. Rotate any PayPal, LLM, or wallet key that may have been exposed.
+
+## License
+
+[MIT](./LICENSE) © 2026 Agentic PayPal.
