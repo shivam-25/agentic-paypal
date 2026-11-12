@@ -11,7 +11,7 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vo")
 os.makedirs(OUT, exist_ok=True)
 
 SEGMENTS = [
-    ("s1", "Meet Agentic PayPal. It gives an autonomous A.I. agent a wallet linked to your PayPal account, so it can buy the things you need — on its own."),
+    ("s1", "Meet Agentic PayPal. It gives an autonomous A.I. agent a wallet linked to your PayPal account, so it can buy the things you need on its own — paid in US dollars using PyUSD, the PayPal stablecoin."),
     ("s2", "First, you log in with PayPal. The email on your PayPal account becomes the identity your agent's wallet is linked to. You fund it once, in dollars, and the agent is ready to spend."),
     ("s3", "PayPal is a merchant business, so Agentic PayPal is built for buying goods. Ask the agent for something, and it browses the store and places the order, paying in U.S. dollars."),
     ("s4", "But not every purchase is equal, so you set a limit. A small, everyday purchase inside your limit is paid instantly from the wallet, with no interruption. This is the micro payment. Pre-approved."),

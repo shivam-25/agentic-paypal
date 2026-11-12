@@ -2,8 +2,8 @@
   {
     "id": "s1",
     "wav": "/Users/code_rambo/Documents/go_projects/Bru/agent-pay-demo/demo-video/vo/s1.wav",
-    "dur": 11.091,
-    "text": "Meet Agentic PayPal. It gives an autonomous A.I. agent a wallet linked to your PayPal account, so it can buy the things you need \u2014 on its own."
+    "dur": 15.251,
+    "text": "Meet Agentic PayPal. It gives an autonomous A.I. agent a wallet linked to your PayPal account, so it can buy the things you need on its own \u2014 paid in US dollars using PyUSD, the PayPal stablecoin."
   },
   {
     "id": "s2",

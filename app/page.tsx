@@ -16,7 +16,8 @@ export default function Home() {
         <p>
           Log in with PayPal, fund it once, and your agent buys what you need on
           its own — goods from a store, data, APIs. Small purchases pay instantly;
-          larger ones ask for your PayPal approval. All in USD.
+          larger ones ask for your PayPal approval. All in US dollars, settled with
+          PyUSD — the PayPal stablecoin.
         </p>
       </div>
 
@@ -75,7 +76,7 @@ export default function Home() {
       </div>
 
       <div className="foot">
-        <b>PayPal</b> links & funds · <b>wallet</b> buys goods · <b>micro/macro</b> limits · all in USD
+        <b>PayPal</b> links & funds · <b>wallet</b> buys goods · <b>micro/macro</b> limits · settled in PyUSD
       </div>
 
       <style jsx>{`

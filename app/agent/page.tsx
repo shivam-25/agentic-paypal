@@ -89,7 +89,7 @@ export default function AgentConsole() {
       <div className="hero">
         <span className="badge">Agentic PayPal · Agent Console</span>
         <h1>Tell the agent what to buy</h1>
-        <p>An AI agent with a wallet linked to your PayPal. It buys goods and services — in USD.</p>
+        <p>An AI agent with a wallet linked to your PayPal. It buys goods and services, paid in US dollars using PyUSD — the PayPal stablecoin.</p>
         <div className="controls">
           <span className={`chip ${linkedEmail ? "on" : ""}`}>
             {linkedEmail ? `PayPal: ${linkedEmail}` : "PayPal: not linked"}
@@ -341,7 +341,10 @@ function ToolCard({ step }: { step: Step }) {
         )}
       </div>
       {step.tool === "link_paypal" && r.linked && (
-        <div className="kv">✓ Linked PayPal <b>{r.email}</b> · balance <b>{r.balanceUSD}</b></div>
+        <div className="paid">
+          <div className="kv">✓ PayPal linked — agent wallet created for <b>{r.email}</b></div>
+          <div className="kv dim2">wallet <code className="pid">{r.address}</code> · balance <b>{r.balanceUSD}</b> · PyUSD</div>
+        </div>
       )}
       {step.tool === "browse_store" && Array.isArray(r.products) && (
         <>

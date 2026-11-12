@@ -1,5 +1,5 @@
 file 'frames/title.png'
-duration 11.09
+duration 15.25
 file 'frames/login.png'
 duration 11.21
 file 'frames/goods.png'

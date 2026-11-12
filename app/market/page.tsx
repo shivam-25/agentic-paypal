@@ -99,7 +99,7 @@ export default function Store() {
       <div className="walletbar">
         <div>
           <div className="wlabel">Agent wallet balance</div>
-          <div className="wbal">{balance} <span>USD</span></div>
+          <div className="wbal">{balance} <span>USD · PyUSD</span></div>
           {addr && <div className="waddr">{addr}</div>}
         </div>
         <a className="fundlink" href={`/onboard?addr=${addr}`}>+ Fund with PayPal</a>

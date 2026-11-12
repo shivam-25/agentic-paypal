@@ -13,7 +13,7 @@ echo "narration duration: $ADUR"
 # 2) Image timeline — one slide per narration segment (durations ≈ segment lengths).
 cat > ilist.txt <<EOF
 file '$F/title.png'
-duration 11.09
+duration 15.25
 file '$F/login.png'
 duration 11.21
 file '$F/goods.png'
